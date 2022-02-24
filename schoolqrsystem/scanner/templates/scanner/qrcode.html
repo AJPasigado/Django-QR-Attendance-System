@@ -12,7 +12,9 @@
     <select class="form-select form-select-sm camera_options mx-auto mb-3 mt-4" aria-label=".form-select-sm example" id="camera_options" onchange="changeCamera()">
     </select>
 
-    <video class="qr-scanner" id="preview"></video>
+    <div class="qr-reader mx-auto">
+        <div id="reader" width="60px"></div>
+    </div>
 
     <p>Please align your code inside the box to scan.</p>
 
@@ -47,56 +49,6 @@
     </div>
 
     <script type="text/javascript">
-
-        var myRedirect = function(redirectUrl, arg, value) {
-            $('#recording_modal').modal('show')
-
-            $.ajax({
-                type:"POST",
-                url: "/scanner/add",
-                data:{
-                    data: value,
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                },
-                success: function(data)
-                {
-                    $('#recording_modal').modal('hide')
-                    $('#success_modal').modal('show')
-
-                    if (data['error_message']) {
-                        document.getElementById("result_modal_title").textContent = data['error_message'];
-                    } else {
-                        document.getElementById("result_modal_title").textContent = "Attendance recorded for " + data['student_name'];
-                    }
-                },
-                error: function (data) {
-                    $('#recording_modal').modal('hide')
-                    $('#failed_modal').modal('show')
-                }
-            })
-        };
-
-        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-        scanner.addListener('scan', function (content) {
-            var redirect = '';
-            myRedirect(redirect, "message", content);
-        });
-
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-                var camera_options = document.getElementById("camera_options");
-                for (i = 0; i < cameras.length; i++) {
-                    var camera = new Option(cameras[i].name, i);
-                    camera_options.options.add(camera);
-                }
-                scanner.start(cameras[0]);
-            } else {
-                console.error('No cameras found.');
-            }
-        }).catch(function (e) {
-            console.error(e);
-        });
-
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         function refreshTime() {
             const timeString = new Date().toLocaleTimeString();
@@ -106,17 +58,83 @@
         }
         setInterval(refreshTime, 1000);
 
-        function changeCamera() {
-            Instascan.Camera.getCameras().then(function (cameras) {
-                if (cameras.length > 0) {
-                    var camera = document.getElementById("camera_options").selectedIndex;
-                    scanner.start(cameras[camera]);
-                } else {
-                    console.error('No cameras found.');
+
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                var cameraId = devices[0].id;
+                var camera_options = document.getElementById("camera_options");
+
+                for (i = 0; i < devices.length; i++) {
+                    var camera = new Option(devices[i].label, i);
+                    camera_options.options.add(camera);
                 }
-            }).catch(function (e) {
-                console.error(e);
+
+                const html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(cameraId, {
+                    fps: 10, qrbox: { width: 300, height: 300 }
+                },  (decodedText, decodedResult) => {
+                    recordData(decodedText);
+                }, (errorMessage) => {
+                    // parse error, ignore it.
+                })
+                .catch((err) => {
+                  // Start failed, handle it.
+                });
+          }
+        }).catch(err => {
+          // handle err
+        });
+
+        function changeCamera() {
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    var cameraId = devices[document.getElementById("camera_options").selectedIndex].id;
+                    const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+                    html5QrCode.start(cameraId, {
+                        fps: 10,    // Optional, frame per seconds for qr code scanning
+                        qrbox: { width: 300, height: 300 }  // Optional, if you want bounded box UI
+                    }, (decodedText, decodedResult) => {
+                        recordData(decodedText);
+                    },(errorMessage) => {
+                        // parse error, ignore it.
+                    }).catch((err) => {
+                        // Start failed, handle it.
+                    });
+                }
+            }).catch(err => {
+              // handle err
             });
+        }
+
+        function recordData(data){
+            $('#recording_modal').modal('show')
+
+            $.ajax({
+                type:"POST",
+                url: "/scanner/add",
+                data:{
+                    data: data,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success: function(data)
+                {
+                    $('#recording_modal').modal('hide')
+                    $('#success_modal').modal('show')
+
+                    setTimeout("$('#success_modal').modal('hide');",1500);
+
+                    if (data['error_message']) {
+                        document.getElementById("result_modal_title").textContent = data['error_message'];
+                    } else {
+                        document.getElementById("result_modal_title").textContent = "Attendance recorded for " + data['student_name'];
+
+                    }
+                },
+                error: function (data) {
+                    $('#recording_modal').modal('hide')
+                    $('#failed_modal').modal('show')
+                }
+            })
         }
     </script>
 {% endblock %}

@@ -4,8 +4,6 @@ body {
   text-align: center;
 }
 
-
-
 .title-text {
   font-weight: 700;
   font-size: 1em;
@@ -16,7 +14,9 @@ body {
 }
 
 .wrapper {
-  padding: 4em;
+  padding-top: 4em;
+  padding-left: 2em;
+  padding-right: 2em;
   width: 100%;
 }
 
@@ -51,7 +51,7 @@ body {
   width: 50%;
 }
 
-.qr-scanner {
+.qr-reader {
   width: 100%;
 }
 
@@ -66,12 +66,10 @@ body {
   }
 
   .wrapper {
-    padding: 4em;
+    padding-top: 4em;
+    padding-left: 4em;
+    padding-right: 4em;
     width: 100%;
-  }
-
-  .content {
-    align-items: center;
   }
 
   .time-stamp {
@@ -101,7 +99,7 @@ body {
     width: 50%;
   }
 
-  .qr-scanner {
-    width: 50%;
+  .qr-reader {
+    max-width: 50%;
   }
 }
