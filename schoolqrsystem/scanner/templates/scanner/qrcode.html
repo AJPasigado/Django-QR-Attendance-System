@@ -58,6 +58,7 @@
         }
         setInterval(refreshTime, 1000);
 
+        var lastRecord = undefined;
 
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
@@ -73,7 +74,10 @@
                 html5QrCode.start(cameraId, {
                     fps: 10, qrbox: { width: 300, height: 300 }
                 },  (decodedText, decodedResult) => {
-                    recordData(decodedText);
+                    if (lastRecord != decodedText) {
+                       lastRecord = decodedText;
+                       recordData(decodedText);
+                    }
                 }, (errorMessage) => {
                     // parse error, ignore it.
                 })
@@ -94,7 +98,10 @@
                         fps: 10,    // Optional, frame per seconds for qr code scanning
                         qrbox: { width: 300, height: 300 }  // Optional, if you want bounded box UI
                     }, (decodedText, decodedResult) => {
-                        recordData(decodedText);
+                        if (lastRecord != decodedText) {
+                            lastRecord = decodedText;
+                            recordData(decodedText);
+                        }
                     },(errorMessage) => {
                         // parse error, ignore it.
                     }).catch((err) => {
@@ -127,7 +134,6 @@
                         document.getElementById("result_modal_title").textContent = data['error_message'];
                     } else {
                         document.getElementById("result_modal_title").textContent = "Attendance recorded for " + data['student_name'];
-
                     }
                 },
                 error: function (data) {
