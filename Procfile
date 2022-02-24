@@ -1,0 +1,1 @@
+web: gunicorn schoolqrsystem.schoolqrsystem.wsgi --log-file -
