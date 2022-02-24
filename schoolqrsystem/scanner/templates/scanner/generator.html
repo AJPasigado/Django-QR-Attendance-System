@@ -1,0 +1,68 @@
+{% extends 'scanner/base.html' %}
+
+{% block title %}
+    QR Generator
+{% endblock %}
+
+{% block content %}
+    <div class="row mt-5">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-4">
+            <form>
+                <div class="form-group mb-4">
+                    <label for="exampleFormControlInput1">Student ID</label>
+                    <input type="email" class="form-control" id="studentIdField" placeholder="Student ID" onInput="refreshCode()" >
+                </div>
+                <div class="row mb-5">
+                    <div class="col">
+                        <label for="exampleFormControlInput1">Last Name</label>
+                        <input type="email" class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()">
+                    </div>
+                    <div class="col">
+                        <label for="exampleFormControlInput1">First Name</label>
+                        <input type="email" class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()">
+                    </div>
+                    <div class="col">
+                        <label for="exampleFormControlInput1">Middle Initial</label>
+                        <input type="email" class="form-control" id="middleInitialField" placeholder="Middle Initial" onInput="refreshCode()">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-1">
+        </div>
+
+        <div class="col-lg-4">
+            <div class="qrcode" id="qrcode"></div>
+        </div>
+
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function refreshCode(event)
+        {
+            let studentIdField = document.getElementById("studentIdField").value + "<data>"
+            let lastNameField = document.getElementById("lastNameField").value + "<data>"
+            let firstNameField = document.getElementById("firstNameField").value + "<data>"
+            let middleInitialField = document.getElementById("middleInitialField").value + "<data>"
+
+            qrcode.clear();
+            qrcode.makeCode(studentIdField + lastNameField + firstNameField + middleInitialField);
+        }
+
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "http://jindo.dev.naver.com/collie",
+            width: 250,
+            height: 250,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+
+{% endblock %}
+

@@ -1,0 +1,107 @@
+html,
+body {
+  height: 100%;
+  text-align: center;
+}
+
+
+
+.title-text {
+  font-weight: 700;
+  font-size: 1em;
+}
+
+.title-text-secondary {
+  font-weight: 400;
+}
+
+.wrapper {
+  padding: 4em;
+  width: 100%;
+}
+
+.content {
+  align-items: center;
+}
+
+.time-stamp {
+  font-size: 2em;
+  font-weight: 600;
+  margin-bottom: -0.1em;
+}
+
+.date-stamp {
+  font-size: 1em;
+  font-weight: 400;
+}
+
+.export_button {
+  width: 100%;
+}
+
+.qrcode {
+  width: 100%;
+}
+
+.hamburger-icon {
+  cursor: pointer;
+}
+
+.camera_options {
+  width: 50%;
+}
+
+.qr-scanner {
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  .title-text {
+    font-weight: 700;
+    font-size: 2em;
+  }
+
+  .title-text-secondary {
+    font-weight: 400;
+  }
+
+  .wrapper {
+    padding: 4em;
+    width: 100%;
+  }
+
+  .content {
+    align-items: center;
+  }
+
+  .time-stamp {
+    font-size: 4em;
+    font-weight: 600;
+    margin-bottom: -0.1em;
+  }
+
+  .date-stamp {
+    font-size: 1.5em;
+    font-weight: 400;
+  }
+
+  .export_button {
+    width: 100%;
+  }
+
+  .qrcode {
+    width: 100%;
+  }
+
+  .hamburger-icon {
+    cursor: pointer;
+  }
+
+  .camera_options {
+    width: 50%;
+  }
+
+  .qr-scanner {
+    width: 50%;
+  }
+}
