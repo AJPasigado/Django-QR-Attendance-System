@@ -6,7 +6,6 @@ body {
 
 .title-text {
   font-weight: 700;
-  font-size: 1em;
 }
 
 .title-text-secondary {
@@ -14,10 +13,11 @@ body {
 }
 
 .wrapper {
-  padding-top: 4em;
+  padding-top: 2em;
   padding-left: 2em;
   padding-right: 2em;
   width: 100%;
+  min-height: 87%;
 }
 
 .content {
@@ -55,10 +55,38 @@ body {
   width: 100%;
 }
 
+.nav-logo {
+    width: 1.5em;
+  }
+
+.login-form {
+  width: 80%;
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+}
+
+.sign-out-button {
+  font-size: 1.5em;
+}
+
 @media only screen and (min-width: 768px) {
+  .login-form {
+    width: 20%;
+    align-items: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .nav-logo {
+    width: 1.7em;
+  }
   .title-text {
     font-weight: 700;
-    font-size: 2em;
+    font-size: 1.5em;
   }
 
   .title-text-secondary {
@@ -66,10 +94,11 @@ body {
   }
 
   .wrapper {
-    padding-top: 4em;
+    padding-top: 2em;
     padding-left: 4em;
     padding-right: 4em;
     width: 100%;
+    min-height: 87%;
   }
 
   .time-stamp {

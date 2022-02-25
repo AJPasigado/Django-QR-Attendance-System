@@ -1,22 +1,18 @@
 {% extends 'scanner/base.html' %}
 
-{% block title %}
-    QR Scanner
-{% endblock %}
-
 {% block content %}
 
     <p class="time-stamp" id="time">12:00:00 AM</p>
     <p class="date-stamp" id="date">January 1, 1990</p>
 
-    <select class="form-select form-select-sm camera_options mx-auto mb-3 mt-4" aria-label=".form-select-sm example" id="camera_options" onchange="changeCamera()">
+    <select class="custom-select camera_options mx-auto mb-3 mt-4" aria-label=".form-select-sm example" id="camera_options" onchange="changeCamera()">
     </select>
 
     <div class="qr-reader mx-auto">
         <div id="reader" width="60px"></div>
     </div>
 
-    <p>Please align your code inside the box to scan.</p>
+    <p class="mb-5">Please align your code inside the box to scan.</p>
 
     <div class="modal" id="recording_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -132,6 +128,7 @@
 
                     if (data['error_message']) {
                         document.getElementById("result_modal_title").textContent = data['error_message'];
+                        lastRecord = undefined;
                     } else {
                         document.getElementById("result_modal_title").textContent = "Attendance recorded for " + data['student_name'];
                     }
@@ -139,6 +136,7 @@
                 error: function (data) {
                     $('#recording_modal').modal('hide')
                     $('#failed_modal').modal('show')
+                    lastRecord = undefined;
                 }
             })
         }

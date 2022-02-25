@@ -5,45 +5,90 @@
 {% endblock %}
 
 {% block content %}
-    <form class="mt-5 mb-4">
+    <form class="mt-5 mb-1">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-lg-2 mb-1">
+                <select id="type" name="type" class="custom-select">
+                    <option value="" selected>Show All Types</option>
+                    {% for type in Types %}
+                        <option value="{{ type.id }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="col-lg-2 mb-2">
+
+            <div class="col-lg-2 mb-1">
+                <div class="w-100 px-1">
+                    <select id="section" name="section" class="selectpicker w-100" data-live-search="true" id="sections_list" multiple title="Select sections">
+                        {% for section in Sections %}
+                            <option value="{{ section.id }}">{{ section.year_level }} - {{ section.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-2 mb-1">
+                <input class="form-control" id="name_field" name="name_field" placeholder="Search for a name" type="text">
+            </div>
+
+            <div class="col-lg-2 mb-1">
                 <input class="form-control" id="start_date" name="start_date" placeholder="Start date" type="text"/>
             </div>
-            <div class="col-lg-2 mb-2">
+            <div class="col-lg-2 mb-1">
                 <input class="form-control" id="end_date" name="end_date" placeholder="End date" type="text"/>
             </div>
+            <div class="col-lg-2 mb-1">
+                <div class="row w-100 p-0 m-0">
+                    <div class="col-lg-6 p-0 pr-1">
+                        <button type="submit" class="btn btn-dark export_button">Search</button>
+                    </div>
+                    <div class="col-lg-6 p-0 pl-1">
+                        <button type="button" onclick="clearFilter()" class="btn btn-outline-dark export_button">Clear</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="row mb-4">
+            <div class="col-lg-2">
+            </div>
+            <div class="col-lg-2">
+            </div>
+
+            <div class="col-lg-2">
+            </div>
+
             <div class="col-lg-2 mb-2">
-                <button type="submit" class="btn btn-dark export_button">Filter Search</button>
+            </div>
+            <div class="col-lg-2 mb-2">
             </div>
             <div class="col-lg-2">
                 <button type="button" class="btn btn-outline-dark export_button" onclick="export_file()">Export to CSV</button>
             </div>
-            <div class="col-lg-2">
-            </div>
+
         </div>
-    </form>
 
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Student ID</th>
+                    <th scope="col">Type</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">First Name</th>
                     <th scope="col">Middle Initial</th>
+                    <th scope="col">Section</th>
                     <th scope="col">Timestamp</th>
                 </tr>
             </thead>
             <tbody>
                 {% for attendance in Attendance %}
                     <tr>
-                        <th scope="row">{{ attendance.student_id }}</th>
-                        <td>{{ attendance.first_name }}</td>
+                        <td>{{ attendance.user_type.name }}</td>
                         <td>{{ attendance.last_name }}</td>
+                        <td>{{ attendance.first_name }}</td>
                         <td>{{ attendance.middle_initial }}</td>
+                        <td>{{ attendance.section.year_level }} - {{ attendance.section.name }}</td>
                         <td>{{ attendance.time_stamp|date:"M d, Y g:i:s A"}}</td>
                     </tr>
                 {% endfor %}
@@ -112,12 +157,38 @@
                     return decodeURIComponent(results[1].replace(/\+/g, " "));
             }
 
-            var start_date = document.getElementById("start_date");
-            start_date.value = getParameterByName("start_date");
+            var start_date = getParameterByName("start_date");
+            if (start_date) {
+                document.getElementById("start_date").value = getParameterByName("start_date");
+            }
 
-            var end_date = document.getElementById("end_date");
-            end_date.value = getParameterByName("end_date");
+            var end_date = getParameterByName("end_date");
+            if (end_date) {
+                document.getElementById("end_date").value = getParameterByName("end_date");
+            }
+
+            var type = getParameterByName("type");
+            if (type) {
+                document.getElementById("type").value = getParameterByName("type");
+            }
+
+            var name_field = getParameterByName("name_field");
+            if (name_field) {
+                document.getElementById("name_field").value = getParameterByName("name_field");
+            }
+
+            {% for section in chosen_sections %}
+                $('.selectpicker').selectpicker('val', ['{{ chosen_sections|join:"','" }}']);
+            {% endfor %}
         })
+
+        function clearFilter(){
+            document.getElementById("start_date").value = "";
+            document.getElementById("end_date").value = "";
+            document.getElementById("type").value = "";
+            document.getElementById("name_field").value = "";
+            $('.selectpicker').selectpicker('val', []);
+        }
 
         function export_file(){
             $.ajax({
@@ -140,6 +211,9 @@
                 data:{
                     start_date: document.getElementById("start_date").value,
                     end_date: document.getElementById("end_date").value,
+                    type: document.getElementById("type").value,
+                    name: document.getElementById("name_field").value,
+                    section: $('.selectpicker').val(),
                     csrfmiddlewaretoken: "{{ csrf_token }}",
                 },
                 success: function(data)
@@ -173,7 +247,5 @@
         }
     </script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-
-
 {% endblock %}
 

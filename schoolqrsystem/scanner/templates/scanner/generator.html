@@ -11,21 +11,40 @@
         <div class="col-lg-4">
             <form>
                 <div class="form-group mb-4">
-                    <label for="exampleFormControlInput1">Student ID</label>
-                    <input type="email" class="form-control" id="studentIdField" placeholder="Student ID" onInput="refreshCode()" >
+                    <label class="mb-1">Create a QR for a</label>
+
+                    <div class="btn-group btn-group-toggle w-100" data-toggle="buttons" onchange="refreshCode()">
+                        {% for type in Types %}
+                            <label class="btn btn-outline-secondary w-100 {% if forloop.first %} active {% endif %}}">
+                                <input type="radio" name="types" id="{{ type.name }}" value="{{ type.id }}" autocomplete="off" {% if forloop.first %} checked {% endif %}> {{ type.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="row mb-5">
-                    <div class="col">
+
+                <div class="row mb-4 ">
+                    <div class="col px-2">
                         <label for="exampleFormControlInput1">Last Name</label>
-                        <input type="email" class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()">
+                        <input class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()">
                     </div>
-                    <div class="col">
+                    <div class="col px-2">
                         <label for="exampleFormControlInput1">First Name</label>
-                        <input type="email" class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()">
+                        <input  class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()">
                     </div>
-                    <div class="col">
+                    <div class="col px-2">
                         <label for="exampleFormControlInput1">Middle Initial</label>
-                        <input type="email" class="form-control" id="middleInitialField" placeholder="Middle Initial" onInput="refreshCode()">
+                        <input class="form-control" id="middleInitialField" placeholder="Middle Initial" onInput="refreshCode()">
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="w-100 px-1">
+                        <label class="text-center">Section</label>
+                        <select class="selectpicker w-100" data-live-search="true" id="sections_list" onchange="refreshCode()">
+                            {% for section in Sections %}
+                                <option value="{{ section.id }}">{{ section.year_level }} - {{ section.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
             </form>
@@ -34,7 +53,7 @@
         <div class="col-lg-1">
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4 mb-5">
             <div class="qrcode" id="qrcode"></div>
         </div>
 
@@ -45,13 +64,24 @@
     <script type="text/javascript">
         function refreshCode(event)
         {
-            let studentIdField = document.getElementById("studentIdField").value + "<data>"
+            var qr_type = 0;
+
+            var radios = document.getElementsByName('types');
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    qr_type = radios[i].value
+                    break;
+                }
+            }
+
+            let qrTypeField = qr_type + "<data>"
             let lastNameField = document.getElementById("lastNameField").value + "<data>"
             let firstNameField = document.getElementById("firstNameField").value + "<data>"
             let middleInitialField = document.getElementById("middleInitialField").value + "<data>"
+            let section = document.getElementById("sections_list").value + "<data>"
 
             qrcode.clear();
-            qrcode.makeCode(studentIdField + lastNameField + firstNameField + middleInitialField);
+            qrcode.makeCode(qrTypeField + lastNameField + firstNameField + middleInitialField + section);
         }
 
         var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -62,6 +92,9 @@
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
+
+        // To style only selects with the my-select class
+        $('.selectpicker').selectpicker();
     </script>
 
 {% endblock %}

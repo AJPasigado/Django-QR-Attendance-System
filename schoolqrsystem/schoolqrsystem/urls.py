@@ -22,4 +22,5 @@ urlpatterns = [
     path('', lambda req: redirect('/scanner/')),
     path('admin/', admin.site.urls),
     path('scanner/', include('scanner.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

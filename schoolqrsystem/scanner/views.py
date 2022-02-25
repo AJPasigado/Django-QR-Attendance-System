@@ -6,7 +6,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 from datetime import datetime
-from .models import Attendance
+from .models import Attendance, Section, Types
+from django.db.models import Value as V
+from django.db.models.functions import Concat
 import csv
 
 
@@ -15,12 +17,20 @@ def index(request):
 
 
 def generator(request):
-    return render(request, 'scanner/generator.html')
+    types_list = Types.objects.all()
+    section_list = Section.objects.all()
+    return render(request, 'scanner/generator.html', {'Sections': section_list, 'Types': types_list})
 
 
 def logs(request):
     attendance_list = Attendance.objects.all()
+    types_list = Types.objects.all()
+    section_list = Section.objects.all()
+    chosen_sections = None
 
+    type = request.GET.get('type', None)
+    name_field = request.GET.get('name_field', None)
+    sections = request.GET.getlist('section', None)
     end_date = request.GET.get('end_date', None)
     start_date = request.GET.get('start_date', None)
 
@@ -31,6 +41,18 @@ def logs(request):
     if start_date:
         datetime_object = datetime.strptime(start_date, '%B %d %Y')
         attendance_list = attendance_list.filter(time_stamp__gte=datetime_object)
+
+    if sections:
+        attendance_list = attendance_list.filter(section_id__in=sections)
+        chosen_sections = section_list.filter(id__in=sections)
+
+    if type:
+        attendance_list = attendance_list.filter(user_type_id=type)
+
+    if name_field:
+        attendance_list = attendance_list.annotate(full_name=Concat('last_name', V(' '), 'first_name',
+                                                                    V(' '), 'middle_initial'))\
+            .filter(full_name__icontains=name_field)
 
     attendance_list = attendance_list.order_by('-time_stamp')
 
@@ -45,12 +67,18 @@ def logs(request):
     except EmptyPage:
         attendance = paginator.page(paginator.num_pages)
 
-    return render(request, 'scanner/logs.html', {'Attendance': attendance})
+    return render(request, 'scanner/logs.html', {'Attendance': attendance,
+                                                 'Sections': section_list,
+                                                 'Types': types_list,
+                                                 'chosen_sections': sections})
 
 
 def export(request):
     attendance_list = Attendance.objects.all()
 
+    type = request.POST.get('type', None)
+    name_field = request.POST.get('name_field', None)
+    sections = request.POST.getlist('section', None)
     end_date = request.POST.get('end_date', None)
     start_date = request.POST.get('start_date', None)
 
@@ -61,6 +89,17 @@ def export(request):
     if start_date:
         datetime_object = datetime.strptime(start_date, '%B %d %Y')
         attendance_list = attendance_list.filter(time_stamp__gte=datetime_object)
+
+    if sections:
+        attendance_list = attendance_list.filter(section_id__in=sections)
+
+    if type:
+        attendance_list = attendance_list.filter(user_type_id=type)
+
+    if name_field:
+        attendance_list = attendance_list.annotate(full_name=Concat('last_name', V(' '), 'first_name',
+                                                                    V(' '), 'middle_initial'))\
+            .filter(full_name__icontains=name_field)
 
     opts = Attendance._meta
     response = HttpResponse()
@@ -87,23 +126,25 @@ def add(request):
     error_message = None
     student_name = None
 
-    if len(data) == 5:
-        student_id = data[0]
+    if len(data) == 6:
+        user_type = data[0]
         last_name = data[1]
         first_name = data[2]
         middle_initial = data[3]
+        section = data[4]
 
+        student_name = last_name + ', ' + first_name + ' ' + middle_initial
         try:
-            attendance = Attendance(student_id=student_id,
+            attendance = Attendance(user_type_id=user_type,
                                     last_name=last_name,
                                     first_name=first_name,
                                     middle_initial=middle_initial,
-                                    time_stamp=timezone.now()
+                                    time_stamp=timezone.now(),
+                                    section_id=section
                                     )
             attendance.save()
-            student_name = last_name + ', ' + first_name + ' ' + middle_initial
         except Exception:
-            error_message = "Failed to save attendance for student " + student_id
+            error_message = "Failed to save attendance for student " + student_name
     else:
         error_message = "Wrong format."
 
