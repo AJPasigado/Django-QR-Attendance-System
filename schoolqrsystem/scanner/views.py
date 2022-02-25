@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -9,24 +10,29 @@ from datetime import datetime
 from .models import Attendance, Section, Types
 from django.db.models import Value as V
 from django.db.models.functions import Concat
+from .utils import is_teacher
 import csv
 
 
+@login_required
 def index(request):
     return render(request, 'scanner/qrcode.html')
 
 
+@login_required
+@user_passes_test(is_teacher, login_url='/scanner', redirect_field_name=None)
 def generator(request):
     types_list = Types.objects.all()
     section_list = Section.objects.all()
     return render(request, 'scanner/generator.html', {'Sections': section_list, 'Types': types_list})
 
 
+@login_required
+@user_passes_test(is_teacher, login_url='/scanner', redirect_field_name=None)
 def logs(request):
     attendance_list = Attendance.objects.all()
     types_list = Types.objects.all()
     section_list = Section.objects.all()
-    chosen_sections = None
 
     type = request.GET.get('type', None)
     name_field = request.GET.get('name_field', None)
@@ -73,6 +79,8 @@ def logs(request):
                                                  'chosen_sections': sections})
 
 
+@login_required
+@user_passes_test(is_teacher, login_url='/scanner', redirect_field_name=None)
 def export(request):
     attendance_list = Attendance.objects.all()
 
@@ -121,6 +129,8 @@ def export(request):
     return HttpResponse(response, content_type='text/csv')
 
 
+@login_required
+@user_passes_test(is_teacher, login_url='/scanner', redirect_field_name=None)
 def add(request):
     data = request.POST['data'].split('<data>')
     error_message = None

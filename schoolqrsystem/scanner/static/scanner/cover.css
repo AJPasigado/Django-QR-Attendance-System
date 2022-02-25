@@ -13,7 +13,7 @@ body {
 }
 
 .wrapper {
-  padding-top: 2em;
+  padding-top: 0em;
   padding-left: 2em;
   padding-right: 2em;
   width: 100%;
@@ -130,5 +130,11 @@ body {
 
   .qr-reader {
     max-width: 50%;
+  }
+}
+
+@media only screen and (min-width: 990px) {
+  .clearbutton {
+    padding-left: 10px !important;
   }
 }

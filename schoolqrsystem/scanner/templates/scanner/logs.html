@@ -17,8 +17,10 @@
             </div>
 
             <div class="col-lg-2 mb-1">
-                <div class="w-100 px-1">
-                    <select id="section" name="section" class="selectpicker w-100" data-live-search="true" id="sections_list" multiple title="Select sections">
+                <div class="w-100">
+                    <select id="section" name="section" class="selectpicker w-100" data-live-search="true" id="sections_list"
+                            multiple title="Select sections" data-style="btn-outline-secondary" data-actions-box="true">
+                        <option data-divider="true"></option>
                         {% for section in Sections %}
                             <option value="{{ section.id }}">{{ section.year_level }} - {{ section.name }}</option>
                         {% endfor %}
@@ -37,11 +39,11 @@
                 <input class="form-control" id="end_date" name="end_date" placeholder="End date" type="text"/>
             </div>
             <div class="col-lg-2 mb-1">
-                <div class="row w-100 p-0 m-0">
-                    <div class="col-lg-6 p-0 pr-1">
+                <div class="row w-100 m-0">
+                    <div class="col-lg-6 p-0 mb-1">
                         <button type="submit" class="btn btn-dark export_button">Search</button>
                     </div>
-                    <div class="col-lg-6 p-0 pl-1">
+                    <div class="col-lg-6 p-0 clearbutton">
                         <button type="button" onclick="clearFilter()" class="btn btn-outline-dark export_button">Clear</button>
                     </div>
                 </div>

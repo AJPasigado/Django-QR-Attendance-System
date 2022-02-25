@@ -23,15 +23,15 @@
                 </div>
 
                 <div class="row mb-4 ">
-                    <div class="col px-2">
+                    <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">Last Name</label>
                         <input class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()">
                     </div>
-                    <div class="col px-2">
+                    <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">First Name</label>
                         <input  class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()">
                     </div>
-                    <div class="col px-2">
+                    <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">Middle Initial</label>
                         <input class="form-control" id="middleInitialField" placeholder="Middle Initial" onInput="refreshCode()">
                     </div>
@@ -40,7 +40,8 @@
                 <div class="row mb-5">
                     <div class="w-100 px-1">
                         <label class="text-center">Section</label>
-                        <select class="selectpicker w-100" data-live-search="true" id="sections_list" onchange="refreshCode()">
+                        <select class="selectpicker w-100" data-live-search="true" id="sections_list" onchange="refreshCode()" data-style="btn-outline-secondary">
+                            <option value="">None</option>
                             {% for section in Sections %}
                                 <option value="{{ section.id }}">{{ section.year_level }} - {{ section.name }}</option>
                             {% endfor %}
