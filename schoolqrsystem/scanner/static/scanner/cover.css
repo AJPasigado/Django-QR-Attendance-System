@@ -138,3 +138,22 @@ body {
     padding-left: 10px !important;
   }
 }
+
+#overlay {
+  position: absolute; /* Sit on top of the page content */
+  /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.95); /* Black background with opacity */
+  z-index: 2;
+}
+
+.paragraph-overlay {
+  z-index: 3;
+  margin-top: 130px;
+  margin-left: auto;
+}

@@ -38,3 +38,7 @@ class Attendance(models.Model):
 
     def __str__(self):
         return self.last_name + ' ' + self.first_name + ', ' + self.middle_initial + '. '
+
+    def save(self, *args, **kwargs):
+        self.middle_initial = self.middle_initial.title()
+        super(Attendance, self).save(*args, **kwargs)

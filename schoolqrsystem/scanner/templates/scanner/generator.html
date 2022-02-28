@@ -9,7 +9,7 @@
         <div class="col-lg-2">
         </div>
         <div class="col-lg-4">
-            <form class="was-validated">
+            <form >
                 <div class="form-group mb-4">
                     <label class="mb-1">Create a QR for a</label>
 
@@ -23,17 +23,17 @@
                 </div>
 
                 <div class="row mb-4 ">
-                    <div class="col-lg px-2">
+                    <div class="col-lg px-2 was-validated" >
                         <label for="exampleFormControlInput1">Last Name</label>
                         <input class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()" required>
                     </div>
-                    <div class="col-lg px-2">
+                    <div class="col-lg px-2 was-validated">
                         <label for="exampleFormControlInput1">First Name</label>
                         <input  class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()" required>
                     </div>
                     <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">Middle Initial</label>
-                        <input class="form-control" id="middleInitialField" placeholder="Middle Initial" onInput="refreshCode()">
+                        <input class="form-control" id="middleInitialField" placeholder="Middle Initial" onInput="refreshCode()" maxlength="1" onkeyup="this.value = this.value.toUpperCase();">
                     </div>
                 </div>
 
@@ -55,7 +55,13 @@
         </div>
 
         <div class="col-lg-4 mb-5">
+            <div id="overlay">
+                <p class="paragraph-overlay"> Last name and first name are required.</p>
+            </div>
+
             <canvas id="qrcode"></canvas>
+
+
         </div>
 
         <div class="col-lg-2">
@@ -83,6 +89,12 @@
 
             var code = qrTypeField + lastNameField + firstNameField + middleInitialField + section
             var qrcode = new QRious({element: document.getElementById("qrcode"), value: code, size: 300});
+
+            if (document.getElementById("firstNameField").value && document.getElementById("lastNameField").value) {
+                document.getElementById("overlay").hidden = true;
+            } else {
+                document.getElementById("overlay").hidden = false;
+            }
         }
 
         refreshCode();
