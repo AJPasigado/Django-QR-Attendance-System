@@ -143,18 +143,21 @@ def add(request):
         middle_initial = data[3]
         section = data[4]
 
-        student_name = last_name + ', ' + first_name + ' ' + middle_initial
-        try:
-            attendance = Attendance(user_type_id=user_type,
-                                    last_name=last_name,
-                                    first_name=first_name,
-                                    middle_initial=middle_initial,
-                                    time_stamp=timezone.now(),
-                                    section_id=section
-                                    )
-            attendance.save()
-        except Exception:
-            error_message = "Failed to save attendance for student " + student_name
+        if user_type and last_name and first_name and middle_initial:
+            student_name = last_name + ', ' + first_name + ' ' + middle_initial
+            try:
+                attendance = Attendance(user_type_id=user_type,
+                                        last_name=last_name,
+                                        first_name=first_name,
+                                        middle_initial=middle_initial,
+                                        time_stamp=timezone.now(),
+                                        section_id=section
+                                        )
+                attendance.save()
+            except Exception:
+                error_message = "Failed to save attendance for student " + student_name
+        else:
+            error_message = "Failed to scan QR Code."
     else:
         error_message = "Wrong format."
 

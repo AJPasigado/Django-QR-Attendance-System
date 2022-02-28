@@ -22,7 +22,7 @@
                             multiple title="Select sections" data-style="btn-outline-secondary" data-actions-box="true">
                         <option data-divider="true"></option>
                         {% for section in Sections %}
-                            <option value="{{ section.id }}">{{ section.year_level }} - {{ section.name }}</option>
+                            <option value="{{ section.id }}">{{ section.section_name }}</option>
                         {% endfor %}
                     </select>
                 </div>

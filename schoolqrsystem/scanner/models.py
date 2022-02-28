@@ -7,6 +7,10 @@ class Types(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        super(Types, self).save(*args, **kwargs)
+
 
 class Section(models.Model):
     year_level = models.IntegerField()
@@ -14,6 +18,14 @@ class Section(models.Model):
 
     def __str__(self):
         return str(self.year_level) + ' - ' + self.name
+
+    @property
+    def section_name(self):
+        return str(self.year_level) + ' - ' + self.name
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        super(Section, self).save(*args, **kwargs)
 
 
 class Attendance(models.Model):

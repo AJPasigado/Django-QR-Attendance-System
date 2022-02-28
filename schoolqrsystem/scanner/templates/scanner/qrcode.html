@@ -58,13 +58,15 @@
 
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
-                var cameraId = devices[0].id;
+                var cameraId = devices[devices.length - 1].id;
                 var camera_options = document.getElementById("camera_options");
 
                 for (i = 0; i < devices.length; i++) {
                     var camera = new Option(devices[i].label, i);
                     camera_options.options.add(camera);
                 }
+
+                camera_options.value = devices.length - 1;
 
                 const html5QrCode = new Html5Qrcode("reader");
                 html5QrCode.start(cameraId, {

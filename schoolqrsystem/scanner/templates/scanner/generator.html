@@ -43,7 +43,7 @@
                         <select class="selectpicker w-100" data-live-search="true" id="sections_list" onchange="refreshCode()" data-style="btn-outline-secondary">
                             <option value="">None</option>
                             {% for section in Sections %}
-                                <option value="{{ section.id }}">{{ section.year_level }} - {{ section.name }}</option>
+                                <option value="{{ section.id }}">{{ section.section_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -55,7 +55,7 @@
         </div>
 
         <div class="col-lg-4 mb-5">
-            <div class="qrcode" id="qrcode"></div>
+            <canvas id="qrcode"></canvas>
         </div>
 
         <div class="col-lg-2">
@@ -81,18 +81,11 @@
             let middleInitialField = document.getElementById("middleInitialField").value + "<data>"
             let section = document.getElementById("sections_list").value + "<data>"
 
-            qrcode.clear();
-            qrcode.makeCode(qrTypeField + lastNameField + firstNameField + middleInitialField + section);
+            var code = qrTypeField + lastNameField + firstNameField + middleInitialField + section
+            var qrcode = new QRious({element: document.getElementById("qrcode"), value: code, size: 300});
         }
 
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "http://jindo.dev.naver.com/collie",
-            width: 250,
-            height: 250,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
+        refreshCode();
 
         // To style only selects with the my-select class
         $('.selectpicker').selectpicker();
