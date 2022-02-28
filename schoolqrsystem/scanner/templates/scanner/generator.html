@@ -9,7 +9,7 @@
         <div class="col-lg-2">
         </div>
         <div class="col-lg-4">
-            <form>
+            <form class="was-validated">
                 <div class="form-group mb-4">
                     <label class="mb-1">Create a QR for a</label>
 
@@ -25,11 +25,11 @@
                 <div class="row mb-4 ">
                     <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">Last Name</label>
-                        <input class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()">
+                        <input class="form-control" id="lastNameField" placeholder="Last Name" onInput="refreshCode()" required>
                     </div>
                     <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">First Name</label>
-                        <input  class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()">
+                        <input  class="form-control" id="firstNameField" placeholder="First Name" onInput="refreshCode()" required>
                     </div>
                     <div class="col-lg px-2">
                         <label for="exampleFormControlInput1">Middle Initial</label>

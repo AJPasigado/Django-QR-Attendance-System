@@ -143,7 +143,7 @@ def add(request):
         middle_initial = data[3]
         section = data[4]
 
-        if user_type and last_name and first_name and middle_initial:
+        if user_type and (last_name or first_name):
             student_name = last_name + ', ' + first_name + ' ' + middle_initial
             try:
                 attendance = Attendance(user_type_id=user_type,
@@ -157,7 +157,7 @@ def add(request):
             except Exception:
                 error_message = "Failed to save attendance for student " + student_name
         else:
-            error_message = "Failed to scan QR Code."
+            error_message = "At least a last name or first name is required to scan."
     else:
         error_message = "Wrong format."
 
